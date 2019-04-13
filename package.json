@@ -1,0 +1,50 @@
+{
+  "name": "PendingPR",
+  "version": "1.0.0",
+  "description": "A GitHub app to help you manage issues that are in pull requests better",
+  "author": "Danish Dua <danish@dandua.com> (https://github.com/dandua98/PendingPR)",
+  "license": "ISC",
+  "repository": "https://github.com//PendingPR.git",
+  "homepage": "https://github.com//PendingPR",
+  "bugs": "https://github.com//PendingPR/issues",
+  "keywords": [
+    "probot",
+    "github",
+    "probot-app",
+    "github-labels",
+    "pull-request",
+    "github-app"
+  ],
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,json,md,ts}\"",
+    "build": "tsc -p tsconfig.json",
+    "dev": "nodemon --exec \"yarn start\"",
+    "start": "probot run ./lib/index.js",
+    "lint": "yarn format",
+    "test": "jest && prettier --check \"**/*.{js,json,md,ts}\"",
+    "test:watch": "jest --watch --notify --notifyMode=change --coverage"
+  },
+  "dependencies": {
+    "@types/nock": "^9.3.0",
+    "nock": "^10.0.0",
+    "probot": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.0",
+    "@types/node": "^11.9.0",
+    "eslint-plugin-typescript": "^0.14.0",
+    "jest": "^24.0.0",
+    "nodemon": "^1.17.2",
+    "prettier": "^1.17.0",
+    "smee-client": "^1.0.2",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.1",
+    "typescript-eslint-parser": "^22.0.0"
+  },
+  "engines": {
+    "node": ">= 8.3.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
