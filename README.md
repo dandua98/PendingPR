@@ -7,7 +7,7 @@ A GitHub App built with [Probot](https://github.com/probot/probot) to help you m
 ## Usage
 
 PendingPR assigns a _Pending PR_ label to an issue claimed to be closed by a PR in its
-description. The label is then removed from the issue as soon as the PR is closed/merged. This
+body. The label is then removed from the issue as soon as the PR is closed/merged. This
 provides better visibility to you and your team on what issues are currently in PRs so you can focus
 on what needs to be done instead!
 
@@ -15,7 +15,7 @@ For more infomation, check this GitHub article on [Closing issues using keywords
 
 **Example:**
 
-The following description would assign a _Pending PR_ label to issues _10_, _12_ and _15_ if they exist.
+The following PR body would assign a _Pending PR_ label to issues _10_, _12_ and _15_ if they exist.
 
 _This PR closes #10, resolves #12 and fixed: #15_
 
@@ -26,8 +26,8 @@ are automatically closed by GitHub if the PR is merged.
 
 - PendingPR only assigns labels to open issues
 - Reopening a closed PR will lead to _Pending PR_ label being assigned to issues mentioned in the
-  description if the issues are still open
-- Editing a PR's description and removing/adding issues from description will remove/add the label to
+  body if the issues are still open
+- Editing a PR's body and removing/adding issues from body will remove/add the label to
   those issues
 - Closing an issue in a different repository isn't supported yet
 
