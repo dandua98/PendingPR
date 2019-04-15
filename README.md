@@ -1,8 +1,6 @@
 # PendingPR
 
-<img alt="PendingPR logo" src="./docs/resources/logo.svg" width="200">
-
-_GitHub [[MIT](http://opensource.org/licenses/mit-license.php) or [OFL](http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web)]_
+<img alt="PendingPR logo" src="./docs/resources/logo.png" width="200">
 
 A GitHub App built with [Probot](https://github.com/probot/probot) to help you manage issues that are in pull requests (PRs) better
 
@@ -58,8 +56,3 @@ For more, check out the [Contributing Guide](CONTRIBUTING.md).
 ## License
 
 [ISC](LICENSE) © 2019 Danish Dua <danish@dandua.com> (https://github.com/dandua98/PendingPR)
-
-## Attribution
-
-The logo for PendingPR is is the Git pull request octicon made available by [GitHub](https://github.com)
-on [Wikimedia Commons](https://commons.wikimedia.org/wiki/Main_Page).
