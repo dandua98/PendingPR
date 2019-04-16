@@ -6,6 +6,8 @@ A GitHub App built with [Probot](https://github.com/probot/probot) to help you m
 
 ## Usage
 
+![pending-pr-demo](https://raw.githubusercontent.com/dandua98/PendingPR/master/docs/resources/pending-pr-demo.gif)
+
 PendingPR assigns a _Pending PR_ label to an issue claimed to be closed by a PR in its
 body. The label is then removed from the issue as soon as the PR is closed/merged. This
 provides better visibility to you and your team on what issues are currently in PRs so you can focus
