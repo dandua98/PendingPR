@@ -29,7 +29,7 @@ are automatically closed by GitHub if the PR is merged.
   body if the issues are still open
 - Editing a PR's body and removing/adding issues from body will remove/add the label to
   those issues
-- Closing an issue in a different repository isn't supported yet
+- Labelling an issue in a different repository isn't supported yet
 
 ## Developer Setup
 
