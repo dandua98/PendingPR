@@ -2,7 +2,7 @@
 
 <img alt="PendingPR logo" src="https://raw.githubusercontent.com/dandua98/PendingPR/master/docs/resources/logo.png" width="250">
 
-A GitHub App built with [Probot](https://github.com/probot/probot) to help you manage issues that are in pull requests (PRs) better
+A GitHub App built with [Probot](https://github.com/probot/probot) to help you manage issues in pull requests (PRs) better
 
 ## Usage
 
