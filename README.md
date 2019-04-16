@@ -1,6 +1,6 @@
 # PendingPR
 
-<img alt="PendingPR logo" src="./docs/resources/logo.png" width="200">
+<img alt="PendingPR logo" src="https://raw.githubusercontent.com/dandua98/PendingPR/master/docs/resources/logo.png" width="250">
 
 A GitHub App built with [Probot](https://github.com/probot/probot) to help you manage issues that are in pull requests (PRs) better
 
@@ -33,6 +33,10 @@ are automatically closed by GitHub if the PR is merged.
 
 ## Developer Setup
 
+To contribute to this repo and test locally, you will need to register a private github app and run
+this probot application locally. Follow this [tutorial](https://probot.github.io/docs/development/) by
+probot for setup and instead of _Generating a new app_, simply fork and clone this repo.
+
 ```sh
 # Install dependencies
 yarn install
@@ -47,6 +51,9 @@ yarn start
 yarn dev
 ```
 
+If it's your first time running the application or you haven't registered your app with a github app
+yet, navigate to [localhost:3000](http://localhost:3000) in your browser to setup.
+
 ## Contributing
 
 If you have suggestions for how PendingPR could be improved, or want to report a bug, open an issue! We'd love all and any contributions.
@@ -55,4 +62,4 @@ For more, check out the [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
-[ISC](LICENSE) © 2019 Danish Dua <danish@dandua.com> (https://github.com/dandua98/PendingPR)
+[ISC](https://github.com/dandua98/PendingPR/blob/master/LICENSE) © 2019 Danish Dua <danish@dandua.com> (https://github.com/dandua98/PendingPR)
