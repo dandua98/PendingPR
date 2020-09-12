@@ -1,66 +1,54 @@
 import { Context } from "probot";
 import { CONFIG } from "../config";
-import * as http_status_codes from "http-status-codes";
 
 export namespace InstallationHandler {
   export async function onInstallation(context: Context) {
-    for (let repo of context.payload.repositories) {
-      await createLabel(context, repo);
-    }
+    let login = context.payload.installation.account.login;
+    await Promise.all(
+      context.payload.repositories.map(async (repo: any) => {
+        await createLabel(context, login, repo);
+      })
+    );
   }
 
   export async function onInstallationRepoAdded(context: Context) {
-    for (let repo of context.payload.repositories_added) {
-      await createLabel(context, repo);
-    }
+    let login = context.payload.installation.account.login;
+    await Promise.all(
+      context.payload.repositories_added.map(async (repo: any) => {
+        await createLabel(context, login, repo);
+      })
+    );
   }
 
   /*
-   * Creates a label on a repo if it doesn't have one
+   * Creates a PendingPR label on the repo if it doesn't have one
    *
    * @param context - Probot webhook context
    *
    * @param repo: repository payload
    */
-  async function createLabel(context: Context, repo: any) {
+  async function createLabel(context: Context, login: string, repo: any) {
     let payload = {
-      owner: getOwner(repo.full_name),
+      owner: login,
       repo: repo.name,
       name: CONFIG.PENDING_PR_LABEL.name,
       color: CONFIG.PENDING_PR_LABEL.color,
-      description: CONFIG.PENDING_PR_LABEL.description
+      description: CONFIG.PENDING_PR_LABEL.description,
     };
 
-    var archived: boolean = await isArchived(
-      context,
-      getOwner(repo.full_name),
-      repo.name
-    );
+    var archived: boolean = await isArchived(context, login, repo.name);
 
-    await context.github.issues
-      .getLabel(payload)
-      .then(async resp => {
-        if (resp.status !== http_status_codes.OK && !archived) {
-          await context.github.issues.createLabel(payload);
-        }
-      })
-      .catch(async () => {
-        // 404 throws an error
-        if (!archived) {
-          await context.github.issues.createLabel(payload);
-        }
-      });
-  }
-
-  /*
-   * Returns a repo's owner from fullName
-   *
-   * @param fullName - repo full name, i.e username/repo
-   *
-   * @returns - owner i.e username
-   */
-  function getOwner(fullName: string): string {
-    return fullName.split("/")[0];
+    try {
+      let resp = await context.github.issues.getLabel(payload);
+      if (resp.status !== 200 && !archived) {
+        await context.github.issues.createLabel(payload);
+      }
+    } catch (err) {
+      // 404 throws an error
+      if (!archived) {
+        await context.github.issues.createLabel(payload);
+      }
+    }
   }
 
   /*
@@ -74,13 +62,13 @@ export namespace InstallationHandler {
    */
   async function isArchived(
     context: Context,
-    owner: string,
+    login: string,
     repo: string
   ): Promise<boolean> {
-    return await context.github.repos
-      .get({ owner: owner, repo: repo })
-      .then(resp => {
-        return resp.data.archived;
-      });
+    let repos = await context.github.repos.get({
+      owner: login,
+      repo: repo,
+    });
+    return repos.data.archived;
   }
 }

@@ -1,4 +1,4 @@
-import { Application } from "probot"; // eslint-disable-line no-unused-vars
+import { Application } from "probot";
 import { PullRequestHandler } from "./pullRequest/pullRequestHandler";
 import { InstallationHandler } from "./installation/installationHandler";
 
