@@ -1,7 +1,7 @@
 export const CONFIG = {
   PENDING_PR_LABEL: {
     name: "Pending PR",
-    description: "The resolution for the issue is in PR",
-    color: "ffa500"
-  }
+    description: "The resolution to this issue is in a PR",
+    color: "ffa500",
+  },
 };

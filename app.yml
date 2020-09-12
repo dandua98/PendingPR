@@ -13,39 +13,39 @@
 # The list of events the GitHub App subscribes to.
 # Uncomment the event names below to enable them.
 default_events:
-# - check_run
-# - check_suite
-# - commit_comment
-# - create
-# - delete
-# - deployment
-# - deployment_status
-# - fork
-# - gollum
-# - issue_comment
-- issues
-# - label
-# - milestone
-# - member
-# - membership
-# - org_block
-# - organization
-# - page_build
-# - project
-# - project_card
-# - project_column
-# - public
-- pull_request
-# - pull_request_review
-# - pull_request_review_comment
-# - push
-# - release
-# - repository
-# - repository_import
-# - status
-# - team
-# - team_add
-# - watch
+  # - check_run
+  # - check_suite
+  # - commit_comment
+  # - create
+  # - delete
+  # - deployment
+  # - deployment_status
+  # - fork
+  # - gollum
+  # - issue_comment
+  - issues
+  # - label
+  # - milestone
+  # - member
+  # - membership
+  # - org_block
+  # - organization
+  # - page_build
+  # - project
+  # - project_card
+  # - project_column
+  # - public
+  - pull_request
+  # - pull_request_review
+  # - pull_request_review_comment
+  # - push
+  # - release
+  # - repository
+  # - repository_import
+  # - status
+  # - team
+  # - team_add
+  # - watch
 
 # The set of permissions needed by the GitHub App. The format of the object uses
 # the permission name for the key (for example, issues) and the access type for
@@ -83,6 +83,7 @@ default_permissions:
   # Pull requests and related comments, assignees, labels, milestones, and merges.
   # https://developer.github.com/v3/apps/permissions/#permission-on-pull-requests
   pull_requests: write
+
 
   # Manage the post-receive hooks for a repository.
   # https://developer.github.com/v3/apps/permissions/#permission-on-repository-hooks
@@ -124,15 +125,14 @@ default_permissions:
   # https://developer.github.com/v3/apps/permissions/
   # organization_administration: read
 
-
 # The name of the GitHub App. Defaults to the name specified in package.json
-# name: PendingPR
+name: PendingPR
 
 # The homepage of your GitHub App.
 url: https://github.com/dandua98/PendingPR
 
 # A description of the GitHub App.
-description: A GitHub app to help you manage issues that are in pull requests better
+description: A GitHub app to help you manage issues in pull requests better
 
 # Set to true when your GitHub App is available to the public or false when it is only accessible to the owner of the app.
 # Default: false

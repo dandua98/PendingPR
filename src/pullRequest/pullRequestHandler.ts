@@ -1,5 +1,4 @@
 import { Context } from "probot";
-import * as http_status_codes from "http-status-codes";
 import { CONFIG } from "../config";
 
 export namespace PullRequestHandler {
@@ -14,49 +13,95 @@ export namespace PullRequestHandler {
     "fixed",
     "resolve",
     "resolves",
-    "resolved"
+    "resolved",
   ];
 
   export async function onOpenRequestHandler(context: Context) {
-    const body: string = context.payload.pull_request.body.toLowerCase();
-
-    const issues: number[] = parseIssues(body);
-
-    for (let issue of issues) {
-      isOpenIssue(context, issue).then(async resp => {
-        if (resp) {
-          let payload = context.repo({
-            number: issue,
-            labels: [CONFIG.PENDING_PR_LABEL.name]
-          });
-
-          await context.github.issues.addLabels(payload);
-        }
-      });
-    }
+    const body: string = context.payload.pull_request.body.toLocaleLowerCase();
+    await addLabelToIssues(context, parseIssues(body));
   }
 
   export async function onEditRequestHandler(context: Context) {
-    await onOpenRequestHandler(context);
+    // if there are changes to pull request's body
+    if (context.payload.changes && context.payload.changes.body) {
+      const old_body: string = context.payload.changes.body.from.toLocaleLowerCase();
+      const new_body: string = context.payload.pull_request.body.toLocaleLowerCase();
+
+      const old_issues: number[] = parseIssues(old_body);
+      const new_issues: number[] = parseIssues(new_body);
+
+      const to_remove: number[] = [];
+      for (let issue of old_issues) {
+        if (!new_issues.includes(issue)) {
+          to_remove.push(issue);
+        }
+      }
+
+      const to_add: number[] = [];
+      for (let issue of new_issues) {
+        if (!old_issues.includes(issue)) {
+          to_add.push(issue);
+        }
+      }
+
+      await Promise.all([
+        addLabelToIssues(context, to_add),
+        removeLabelFromIssues(context, to_remove),
+      ]);
+    }
   }
 
   export async function onCloseRequestHandler(context: Context) {
     const body: string = context.payload.pull_request.body.toLowerCase();
+    await removeLabelFromIssues(context, parseIssues(body));
+  }
 
-    const issues: number[] = parseIssues(body);
-
-    for (let issue of issues) {
-      hasLabelPendingPR(context, issue).then(async resp => {
-        if (resp) {
+  /*
+   * Adds Pending PR label to issues.
+   *
+   * @param context - Probot webhook context
+   *
+   * @param issues - Github issues numbers in the context repo to check for
+   *
+   */
+  async function addLabelToIssues(context: Context, issues: number[]) {
+    await Promise.all(
+      issues.map(async (issue: number) => {
+        let isOpen: boolean = await isOpenIssue(context, issue);
+        if (isOpen) {
           let payload = context.repo({
             number: issue,
-            labels: [CONFIG.PENDING_PR_LABEL.name]
+            labels: [CONFIG.PENDING_PR_LABEL.name],
           });
 
-          await context.github.issues.removeLabels(payload);
+          await context.github.issues.addLabels(payload);
         }
-      });
-    }
+      })
+    );
+  }
+
+  /*
+   * Removes Pending PR label from issues.
+   *
+   * @param context - Probot webhook context
+   *
+   * @param issues - Github issues numbers in the context repo to check for
+   *
+   */
+  async function removeLabelFromIssues(context: Context, issues: number[]) {
+    await Promise.all(
+      issues.map(async (issue: number) => {
+        let hasLabel: boolean = await hasLabelPendingPR(context, issue);
+        if (hasLabel) {
+          let payload = context.repo({
+            number: issue,
+            name: CONFIG.PENDING_PR_LABEL.name,
+          });
+
+          await context.github.issues.removeLabel(payload);
+        }
+      })
+    );
   }
 
   /*
@@ -69,6 +114,8 @@ export namespace PullRequestHandler {
    * @returns - an array of issues parsed
    */
   function parseIssues(body: string): number[] {
+    body = body.toLocaleLowerCase();
+
     const closeKeywordsCapture: string = CLOSE_KEYWORDS.join("|");
     const testRegexString: string = `(${closeKeywordsCapture})(:\\s*|\\s+)#(\\d+)`;
 
@@ -76,16 +123,16 @@ export namespace PullRequestHandler {
 
     let matches: RegExpMatchArray | null;
 
-    let issues: number[] = [];
+    let issues: Set<number> = new Set();
     do {
       matches = testRegex.exec(body);
 
       if (matches) {
-        issues.push(parseInt(matches[3], 10));
+        issues.add(parseInt(matches[3], 10));
       }
     } while (matches);
 
-    return issues;
+    return Array.from(issues);
   }
 
   /*
@@ -103,19 +150,18 @@ export namespace PullRequestHandler {
   ): Promise<boolean> {
     let payload = context.repo({ number: issue });
 
-    return await context.github.issues.get(payload).then(resp => {
-      if (resp.status === http_status_codes.OK) {
-        for (let label of resp.data.labels) {
-          if (
-            label.name.toLowerCase() ===
-            CONFIG.PENDING_PR_LABEL.name.toLowerCase()
-          ) {
-            return true;
-          }
+    let resp = await context.github.issues.get(payload);
+    if (resp.status === 200) {
+      for (let label of resp.data.labels) {
+        if (
+          label.name.toLowerCase() ===
+          CONFIG.PENDING_PR_LABEL.name.toLowerCase()
+        ) {
+          return true;
         }
       }
-      return false;
-    });
+    }
+    return false;
   }
 
   /*
@@ -125,7 +171,8 @@ export namespace PullRequestHandler {
    *
    * @param issue - GitHub Issue number to check for
    *
-   * @returns - returns true if the issue is open, false if it doesn't
+   * @returns - returns true if the issue is open, false if it
+   *  isn't/doesn't exist
    */
   async function isOpenIssue(
     context: Context,
@@ -133,14 +180,16 @@ export namespace PullRequestHandler {
   ): Promise<boolean> {
     let payload = context.repo({ number: issue });
 
-    return await context.github.issues.get(payload).then(resp => {
-      if (
-        resp.status === http_status_codes.OK &&
-        resp.data.state.toLowerCase() === "open"
-      ) {
-        return true;
-      }
-      return false;
-    });
+    let resp = await context.github.issues.get(payload);
+    // check if issue is open and not a pull request (pull requests are a
+    // subset of issues)
+    if (
+      resp.status === 200 &&
+      resp.data.state.toLowerCase() === "open" &&
+      !resp.data.pull_request
+    ) {
+      return true;
+    }
+    return false;
   }
 }

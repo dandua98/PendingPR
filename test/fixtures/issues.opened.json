@@ -3,13 +3,13 @@
   "issue": {
     "number": 1,
     "user": {
-      "login": "hiimbex"
+      "login": "tester"
     }
   },
   "repository": {
-    "name": "testing-things",
+    "name": "test-repo",
     "owner": {
-      "login": "hiimbex"
+      "login": "tester"
     }
   }
 }

@@ -1,19 +1,20 @@
 {
-  "name": "PendingPR",
-  "version": "1.0.0",
-  "description": "A GitHub app to help you manage issues that are in pull requests better",
+  "name": "pending_pr",
+  "version": "1.1.0",
+  "description": "A GitHub app to help you manage issues in pull requests better",
   "author": "Danish Dua <danish@dandua.com> (https://github.com/dandua98/PendingPR)",
   "license": "ISC",
-  "repository": "https://github.com//PendingPR.git",
-  "homepage": "https://github.com//PendingPR",
-  "bugs": "https://github.com//PendingPR/issues",
+  "repository": "https://github.com/dandua98/PendingPR",
+  "homepage": "https://github.com/dandua98/PendingPR",
+  "bugs": "https://github.com/dandua98/PendingPR/issues",
   "keywords": [
-    "probot",
     "github",
-    "probot-app",
+    "github-app",
     "github-labels",
-    "pull-request",
-    "github-app"
+    "labelling",
+    "probot",
+    "probot-app",
+    "pull-request"
   ],
   "scripts": {
     "format": "prettier --write \"**/*.{js,json,md,ts}\"",
@@ -25,9 +26,6 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "@types/nock": "^9.3.0",
-    "http-status-codes": "^1.3.2",
-    "nock": "^10.0.0",
     "probot": "^7.2.0"
   },
   "devDependencies": {
